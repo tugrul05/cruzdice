@@ -67,7 +67,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-theme-card{border:1px solid transparent;border-radius:5px;cursor:pointer;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:all .22s;position:relative;overflow:hidden}
 .cr-theme-card:hover{transform:translateY(-2px)}
 .cr-theme-card.sel{border-color:var(--s) !important;box-shadow:0 0 12px var(--sp)}
-.cr-theme-card.sel::after{content:'?';position:absolute;top:5px;right:7px;font-size:.55rem;color:var(--s);opacity:.9}
+.cr-theme-card.sel::after{content:'-';position:absolute;top:5px;right:7px;font-size:.55rem;color:var(--s);opacity:.9}
 .cr-tc-preview{width:100%;height:40px;border-radius:4px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
 .cr-tc-grid{position:absolute;inset:0;background-size:16px 16px}
 .cr-tc-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:2px;border-radius:2px}
@@ -89,7 +89,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 
     <header>
       <div class="cr-logo">CRUZ <span>DICE</span></div>
-      <div class="cr-tag">// COLOR ROLLER � TRON WIREFRAME //</div>
+      <div class="cr-tag">// COLOR ROLLER - TRON WIREFRAME //</div>
       <div class="cr-hline"></div>
     </header>
 
@@ -104,7 +104,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
     <div class="cr-panel">
       <div class="cr-plbl">[ DICE COUNT ]</div>
       <div class="cr-crow" id="crCountRow"></div>
-      <div class="cr-plbl">[ COLOR POOL � CLICK TO TOGGLE ]</div>
+      <div class="cr-plbl">[ COLOR POOL - CLICK TO TOGGLE ]</div>
       <div class="cr-clrow" id="crColorRow"></div>
     </div>
 
@@ -115,7 +115,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
       <div class="cr-empty">_ AWAITING ROLL _</div>
     </div>
 
-    <div class="cr-footer">CRUZ DICE &nbsp;�&nbsp; v5.2 &nbsp;�&nbsp; SYSTEM READY</div>
+    <div class="cr-footer">CRUZ DICE &nbsp;-&nbsp; v5.2 &nbsp;-&nbsp; SYSTEM READY</div>
   </div>
 </div>
 
@@ -340,14 +340,14 @@ function roll() {
     wrap.appendChild(die); wrap.appendChild(tag);
     area.appendChild(wrap);
   }
-  rBar.innerHTML = `ROLLED <strong>${diceCount}</strong> DICE &nbsp;�&nbsp; POOL: <strong>${pool.map(c => c.label).join(' � ')}</strong>`;
+  rBar.innerHTML = `ROLLED <strong>${diceCount}</strong> DICE &nbsp;-&nbsp; POOL: <strong>${pool.map(c => c.label).join(' - ')}</strong>`;
 }
 
 rollBtn.addEventListener('click', roll);
 
 function warn(msg) {
   const el = document.createElement('div'); el.className = 'cr-warn';
-  el.textContent = '? ' + msg;
+  el.textContent = '- ' + msg;
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 2400);
 }
