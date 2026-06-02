@@ -67,12 +67,12 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-theme-card{border:1px solid transparent;border-radius:5px;cursor:pointer;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:7px;transition:all .22s;position:relative;overflow:hidden}
 .cr-theme-card:hover{transform:translateY(-2px)}
 .cr-theme-card.sel{border-color:var(--s) !important;box-shadow:0 0 12px var(--sp)}
-.cr-theme-card.sel::after{content:'-';position:absolute;top:5px;right:7px;font-size:.55rem;color:var(--s);opacity:.9}
+.cr-theme-card.sel::after{content:'';position:absolute;top:8px;right:8px;width:7px;height:12px;border-right:2px solid var(--s);border-bottom:2px solid var(--s);transform:rotate(45deg);opacity:.9;box-shadow:1px 1px 4px var(--sg)}
 .cr-tc-preview{width:100%;height:40px;border-radius:4px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.07)}
 .cr-tc-grid{position:absolute;inset:0;background-size:16px 16px}
 .cr-tc-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:2px;border-radius:2px}
 .cr-tc-name{font-family:'Share Tech Mono',monospace;font-size:.42rem;letter-spacing:.15em;opacity:.8}
-@media(max-width:500px){.cr-die{width:66px;height:66px}.cr-roll{font-size:.95rem;padding:13px 0}.cr-cbtn{width:36px;height:36px}.cr-sw{width:38px;height:38px}}
+@media(max-width:500px){.cr-die{width:66px;height:66px}.cr-roll{font-size:.95rem;padding:13px 0}.cr-cbtn{width:36px;height:36px}.cr-sw{width:38px;height:38}}}
 </style>
 </head>
 <body>
@@ -83,13 +83,17 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
   <div class="cr-inner">
 
     <div class="cr-topbar">
+      <a href="https://www.tiktok.com/@rexcruzytt" target="_blank" id="btnTiktok" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--s);border-radius:3px;box-shadow:0 0 5px var(--sp);text-decoration:none;transition:all .2s;flex-shrink:0" onmouseover="this.style.boxShadow='0 0 14px var(--s)'" onmouseout="this.style.boxShadow='0 0 5px var(--sp)'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z" fill="var(--s)"/>
+        </svg>
+      </a>
       <button class="cr-tbtn" id="btnSettings">&#9881; BACKGROUND</button>
       <button class="cr-tbtn" id="btnSound">&#128266; SOUND ON</button>
     </div>
 
     <header>
       <div class="cr-logo">CRUZ <span>DICE</span></div>
-      <div class="cr-tag">// COLOR ROLLER - TRON WIREFRAME //</div>
       <div class="cr-hline"></div>
     </header>
 
@@ -104,7 +108,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
     <div class="cr-panel">
       <div class="cr-plbl">[ DICE COUNT ]</div>
       <div class="cr-crow" id="crCountRow"></div>
-      <div class="cr-plbl">[ COLOR POOL - CLICK TO TOGGLE ]</div>
+      <div class="cr-plbl">[ COLOR POOL — CLICK TO TOGGLE ]</div>
       <div class="cr-clrow" id="crColorRow"></div>
     </div>
 
@@ -115,18 +119,21 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
       <div class="cr-empty">_ AWAITING ROLL _</div>
     </div>
 
-    <div class="cr-footer">CRUZ DICE &nbsp;-&nbsp; v5.2 &nbsp;-&nbsp; SYSTEM READY</div>
+    <div class="cr-footer">CRUZ DICE &nbsp;·&nbsp; v5.3 &nbsp;·&nbsp; SYSTEM READY</div>
   </div>
 </div>
 
 <script>
+// Disable right-click
 document.addEventListener('contextmenu', e => e.preventDefault());
 
+// Disable text selection & copy
 document.addEventListener('selectstart', e => e.preventDefault());
 document.addEventListener('copy', e => e.preventDefault());
 document.addEventListener('cut', e => e.preventDefault());
 document.addEventListener('dragstart', e => e.preventDefault());
 
+// Disable F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S
 document.addEventListener('keydown', e => {
   if (
     e.key === 'F12' ||
@@ -162,11 +169,11 @@ const THEMES = [
   { id:'ghost',     bg:'#0a0a0f', sc:'#c8c8ff', name:'GHOST',     grid:'rgba(200,200,255,.05)' },
 ];
 
-let diceCount  = 3;
-let soundMuted = false;
+let diceCount    = 3;
+let soundMuted   = false;
 let currentTheme = 'void';
-const enabled  = new Set(COLORS.map(c => c.id));
-let audioCtx   = null;
+const enabled    = new Set(COLORS.map(c => c.id));
+let audioCtx     = null;
 
 const crBg          = document.getElementById('crBg');
 const crGridBg      = document.getElementById('crGridBg');
@@ -197,7 +204,7 @@ function applyTheme(id) {
   currentTheme = id;
   const t    = THEMES.find(x => x.id === id);
   const root = document.documentElement;
-  crBg.style.background = t.bg;
+  crBg.style.background          = t.bg;
   document.body.style.background = t.bg;
   root.style.setProperty('--s',   t.sc);
   root.style.setProperty('--sg',  hexToRgba(t.sc, .55));
@@ -216,18 +223,26 @@ THEMES.forEach(t => {
   card.style.borderColor = 'rgba(255,255,255,.08)';
 
   const gridSvg   = `<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'><path d='M 16 0 L 0 0 0 16' fill='none' stroke='${t.sc}' stroke-width='.6' opacity='.5'/></svg>`;
-  const preview   = document.createElement('div'); preview.className = 'cr-tc-preview'; preview.style.background = t.bg;
-  const gridLayer = document.createElement('div'); gridLayer.className = 'cr-tc-grid';
+  const preview   = document.createElement('div');
+  preview.className        = 'cr-tc-preview';
+  preview.style.background = t.bg;
+  const gridLayer = document.createElement('div');
+  gridLayer.className = 'cr-tc-grid';
   gridLayer.style.backgroundImage = `url("data:image/svg+xml,${encodeURIComponent(gridSvg)}")`;
-  const glow = document.createElement('div'); glow.className = 'cr-tc-glow';
+  const glow = document.createElement('div');
+  glow.className       = 'cr-tc-glow';
   glow.style.background = t.sc;
   glow.style.boxShadow  = `0 0 10px ${t.sc}, 0 0 20px ${hexToRgba(t.sc, .4)}`;
-  preview.appendChild(gridLayer); preview.appendChild(glow);
+  preview.appendChild(gridLayer);
+  preview.appendChild(glow);
 
-  const name = document.createElement('span'); name.className = 'cr-tc-name';
-  name.style.color = t.sc; name.textContent = t.name;
+  const name = document.createElement('span');
+  name.className   = 'cr-tc-name';
+  name.style.color = t.sc;
+  name.textContent = t.name;
 
-  card.appendChild(preview); card.appendChild(name);
+  card.appendChild(preview);
+  card.appendChild(name);
   card.onclick = () => applyTheme(t.id);
   themeGrid.appendChild(card);
 });
@@ -248,7 +263,7 @@ btnSound.onclick = () => {
 
 for (let i = 1; i <= 6; i++) {
   const b = document.createElement('button');
-  b.className  = 'cr-cbtn' + (i === diceCount ? ' active' : '');
+  b.className   = 'cr-cbtn' + (i === diceCount ? ' active' : '');
   b.textContent = i;
   b.onclick = () => {
     diceCount = i;
@@ -262,7 +277,9 @@ COLORS.forEach(c => {
   const lbl = document.createElement('label');
   lbl.className = 'cr-ctog';
   lbl.style.setProperty('--c', c.hex);
-  const inp = document.createElement('input'); inp.type = 'checkbox'; inp.checked = true;
+  const inp = document.createElement('input');
+  inp.type    = 'checkbox';
+  inp.checked = true;
   inp.addEventListener('change', () => {
     if (!inp.checked && enabled.size <= 1) { inp.checked = true; warn('MINIMUM 1 COLOR REQUIRED'); return; }
     inp.checked ? enabled.add(c.id) : enabled.delete(c.id);
@@ -281,7 +298,7 @@ function getCtx() {
 function playRoll() {
   if (soundMuted) return;
   try {
-    const ctx = getCtx();
+    const ctx   = getCtx();
     if (ctx.state === 'suspended') ctx.resume();
     const now   = ctx.currentTime;
     const ticks = 6 + Math.floor(Math.random() * 4);
@@ -340,14 +357,14 @@ function roll() {
     wrap.appendChild(die); wrap.appendChild(tag);
     area.appendChild(wrap);
   }
-  rBar.innerHTML = `ROLLED <strong>${diceCount}</strong> DICE &nbsp;-&nbsp; POOL: <strong>${pool.map(c => c.label).join(' - ')}</strong>`;
+  rBar.innerHTML = `ROLLED <strong>${diceCount}</strong> DICE &nbsp;·&nbsp; POOL: <strong>${pool.map(c => c.label).join(' · ')}</strong>`;
 }
 
 rollBtn.addEventListener('click', roll);
 
 function warn(msg) {
   const el = document.createElement('div'); el.className = 'cr-warn';
-  el.textContent = '- ' + msg;
+  el.textContent = '[ ' + msg + ' ]';
   document.body.appendChild(el);
   setTimeout(() => el.remove(), 2400);
 }
