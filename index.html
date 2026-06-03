@@ -78,6 +78,16 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-tc-glow{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:60%;height:2px;border-radius:2px}
 .cr-tc-name{font-family:'Share Tech Mono',monospace;font-size:.42rem;letter-spacing:.15em;opacity:.8}
 @media(max-width:500px){.cr-die{width:66px;height:66px}.cr-roll{font-size:.95rem;padding:13px 0}.cr-cbtn{width:36px;height:36px}.cr-sw{width:38px;height:38px}}
+
+/* ── BRAINROT THEME ── */
+.brainrot-chars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.br-char{position:absolute;font-size:2.2rem;opacity:0;animation:brFloat linear infinite;filter:drop-shadow(0 0 8px rgba(255,45,120,.7))}
+@keyframes brFloat{
+  0%  {transform:translateY(110vh) rotate(0deg) scale(.7);opacity:0}
+  8%  {opacity:.55}
+  90% {opacity:.4}
+  100%{transform:translateY(-120px) rotate(360deg) scale(1.1);opacity:0}
+}
 </style>
 </head>
 <body>
@@ -85,6 +95,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 <div class="cr-bg" id="crBg">
   <div class="cr-scan"></div>
   <div class="cr-grid-bg" id="crGridBg"></div>
+  <div class="brainrot-chars" id="brainrotChars"></div>
   <div class="cr-inner">
 
     <div class="cr-topbar">
@@ -212,6 +223,7 @@ const THEMES = [
   { id:'toxic',     bg:'#030f00', sc:'#aaff00', name:'TOXIC',     grid:'rgba(170,255,0,.06)'   },
   { id:'ocean',     bg:'#00080f', sc:'#00e5cc', name:'OCEAN',     grid:'rgba(0,229,204,.06)'   },
   { id:'ghost',     bg:'#0a0a0f', sc:'#c8c8ff', name:'GHOST',     grid:'rgba(200,200,255,.05)' },
+  { id:'brainrot',  bg:'#0d0005', sc:'#ff2d78', name:'PINK',      grid:'rgba(255,45,120,.07)'  },
 ];
 
 let diceCount    = 3;
@@ -258,6 +270,26 @@ function applyTheme(id) {
   root.style.setProperty('--bgc', t.bg);
   drawGrid(t.grid);
   document.querySelectorAll('.cr-theme-card').forEach(c => c.classList.toggle('sel', c.dataset.id === id));
+
+  // Brainrot floating chars
+  const brContainer = document.getElementById('brainrotChars');
+  brContainer.innerHTML = '';
+  if (id === 'brainrot') {
+    const chars = ['🍬','🍭','🍫','🍩','🍪','🧁','🍰','🎂','🍮','🍡','🍧','🍨','🍦','🧇','🍿','🍯','🍒','🍇','🍑','🫧'];
+    for (let i = 0; i < 22; i++) {
+      const el = document.createElement('div');
+      el.className   = 'br-char';
+      el.textContent = chars[Math.floor(Math.random() * chars.length)];
+      el.style.left  = Math.random() * 100 + '%';
+      el.style.animationDuration  = (10 + Math.random() * 16) + 's';
+      el.style.animationDelay     = (Math.random() * 14) + 's';
+      el.style.fontSize = (1.4 + Math.random() * 2) + 'rem';
+      brContainer.appendChild(el);
+    }
+    brContainer.style.display = 'block';
+  } else {
+    brContainer.style.display = 'none';
+  }
 }
 
 THEMES.forEach(t => {
