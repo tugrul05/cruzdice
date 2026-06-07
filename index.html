@@ -231,6 +231,10 @@ const THEMES = [
   { id:'ocean',     bg:'#00080f', sc:'#00e5cc', name:'OCEAN',     grid:'rgba(0,229,204,.06)'   },
   { id:'ghost',     bg:'#0a0a0f', sc:'#c8c8ff', name:'GHOST',     grid:'rgba(200,200,255,.05)' },
   { id:'brainrot',  bg:'#0d0005', sc:'#ff2d78', name:'PINK',      grid:'rgba(255,45,120,.07)'  },
+  { id:'space',     bg:'#00000a', sc:'#a78bfa', name:'SPACE',     grid:'rgba(167,139,250,.06)' },
+  { id:'jungle',    bg:'#001a00', sc:'#4ade80', name:'JUNGLE',    grid:'rgba(74,222,128,.06)'  },
+  { id:'ocean2',    bg:'#000a14', sc:'#38bdf8', name:'DEEP SEA',  grid:'rgba(56,189,248,.06)'  },
+  { id:'fire',      bg:'#110000', sc:'#fb923c', name:'FIRE',      grid:'rgba(251,146,60,.06)'  },
 ];
 
 let diceCount    = 3;
@@ -281,16 +285,36 @@ function applyTheme(id) {
   // Brainrot floating chars
   const brContainer = document.getElementById('brainrotChars');
   brContainer.innerHTML = '';
-  if (id === 'brainrot') {
-    const chars = ['🍬','🍭','🍫','🍩','🍪','🧁','🍰','🎂','🍮','🍡','🍧','🍨','🍦','🧇','🍿','🍯','🍒','🍇','🍑','🫧'];
-    for (let i = 0; i < 22; i++) {
+
+  const emojiMap = {
+    brainrot: ['🍬','🍭','🍫','🍩','🍪','🧁','🍰','🎂','🍮','🍡','🍧','🍨','🍦','🍿','🍯','🍒','🍇','🍑','🫧','🌸'],
+    space:    ['🚀','⭐','🌙','🪐','☄️','🌌','👾','🛸','🌠','💫','🔭','🪨','🌟','🛰️','🌑','💥','🌀','🔮','⚡','🌈'],
+    jungle:   ['🌿','🦜','🐍','🌺','🦋','🐆','🌴','🍃','🦎','🐘','🌸','🦚','🐊','🌱','🦩','🍀','🌻','🐉','🦁','🌳'],
+    ocean2:   ['🐋','🐬','🦈','🐙','🦑','🐠','🐡','🦀','🦞','🐚','🌊','🐟','🦭','🐳','🪸','🫧','🐢','🦐','🌊','💎'],
+    fire:     ['🔥','💥','⚡','🌋','☄️','🌡️','🎆','✨','💢','🌪️','🎇','🔴','🟠','💫','⚔️','🗡️','🏮','🎯','💣','🌟'],
+  };
+
+  const emojiThemes = Object.keys(emojiMap);
+  const glowMap = {
+    brainrot: 'rgba(255,45,120,.8)',
+    space:    'rgba(167,139,250,.8)',
+    jungle:   'rgba(74,222,128,.8)',
+    ocean2:   'rgba(56,189,248,.8)',
+    fire:     'rgba(251,146,60,.8)',
+  };
+
+  if (emojiThemes.includes(id)) {
+    const chars = emojiMap[id];
+    const glow  = glowMap[id];
+    for (let i = 0; i < 24; i++) {
       const el = document.createElement('div');
       el.className   = 'br-char';
       el.textContent = chars[Math.floor(Math.random() * chars.length)];
       el.style.left  = Math.random() * 100 + '%';
-      el.style.animationDuration  = (10 + Math.random() * 16) + 's';
-      el.style.animationDelay     = (Math.random() * 14) + 's';
-      el.style.fontSize = (1.4 + Math.random() * 2) + 'rem';
+      el.style.animationDuration = (9 + Math.random() * 15) + 's';
+      el.style.animationDelay    = (Math.random() * 14) + 's';
+      el.style.fontSize          = (1.2 + Math.random() * 2.2) + 'rem';
+      el.style.filter            = `drop-shadow(0 0 8px ${glow})`;
       brContainer.appendChild(el);
     }
     brContainer.style.display = 'block';
