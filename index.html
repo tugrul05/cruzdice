@@ -40,7 +40,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-cbtn:hover{box-shadow:0 0 12px var(--s);transform:translateY(-2px)}
 .cr-cbtn.active{box-shadow:0 0 12px var(--s),0 0 26px var(--sg),inset 0 0 8px var(--sd);text-shadow:0 0 8px var(--s);background:rgba(0,207,255,.08)}
 .cr-clrow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
-.cr-ctog{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.cr-ctog{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:default;pointer-events:none}
 .cr-ctog input{display:none}
 .cr-sw{width:42px;height:42px;border-radius:7px;border:2px solid var(--c);background:transparent;position:relative;transition:all .18s;box-shadow:0 0 7px var(--c)}
 .cr-sw::before{content:'';position:absolute;inset:5px;border-radius:4px;background:var(--c);opacity:.2;transition:opacity .18s}
@@ -386,8 +386,8 @@ COLORS.forEach(c => {
   inp.type    = 'checkbox';
   inp.checked = true;
   inp.addEventListener('change', () => {
-    if (!inp.checked && enabled.size <= 1) { inp.checked = true; warn('MINIMUM 1 COLOR REQUIRED'); return; }
-    inp.checked ? enabled.add(c.id) : enabled.delete(c.id);
+    // Color toggling disabled — always keep checked
+    inp.checked = true;
   });
   const sw = document.createElement('div'); sw.className = 'cr-sw';
   const nm = document.createElement('div'); nm.className = 'cr-cn'; nm.textContent = c.label;
