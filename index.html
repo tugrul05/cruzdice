@@ -101,6 +101,32 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
   95%  { opacity:.7 }
   100% { transform:translateY(-105vh) rotate(360deg) scale(.8); opacity:0  }
 }
+
+  6%  {opacity:1}
+  88% {opacity:.9}
+  100%{transform:translateY(-105vh);opacity:0}
+}
+
+/* ── ANIMATED THEME EFFECTS ── */
+#fx-layer{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;display:none}
+
+/* STARS */
+.star{position:absolute;border-radius:50%;background:#fff;animation:starTwinkle ease-in-out infinite}
+@keyframes starTwinkle{0%,100%{opacity:.9;transform:scale(1)}50%{opacity:.2;transform:scale(.4)}}
+.star-shoot{position:absolute;height:2px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff);border-radius:2px;animation:shoot linear forwards}
+@keyframes shoot{0%{transform:translateX(0) translateY(0);opacity:1;width:0px}100%{transform:translateX(280px) translateY(280px);opacity:0;width:160px}}
+
+/* RAIN */
+.raindrop{position:absolute;width:1.5px;background:linear-gradient(180deg,rgba(72,202,228,0),rgba(72,202,228,.7));border-radius:2px;animation:rainFall linear infinite}
+@keyframes rainFall{0%{transform:translateY(-60px);opacity:0}8%{opacity:1}90%{opacity:.7}100%{transform:translateY(110vh);opacity:0}}
+
+/* LAVA */
+.lava-blob{position:absolute;border-radius:50%;filter:blur(18px);animation:lavaRise ease-in-out infinite}
+@keyframes lavaRise{0%{transform:translateY(0) scale(1);opacity:.7}40%{transform:translateY(-38px) scale(1.15);opacity:.9}70%{transform:translateY(-22px) scale(.92);opacity:.75}100%{transform:translateY(0) scale(1);opacity:.7}}
+
+/* AURORA */
+.aurora-band{position:absolute;left:-20%;width:140%;border-radius:50%;filter:blur(38px);animation:auroraSway ease-in-out infinite}
+@keyframes auroraSway{0%,100%{transform:translateX(0) scaleY(1);opacity:.28}33%{transform:translateX(6%) scaleY(1.18);opacity:.42}66%{transform:translateX(-5%) scaleY(.88);opacity:.22}}
 </style>
 </head>
 <body>
@@ -108,6 +134,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 <div class="cr-bg" id="crBg">
   <div class="cr-scan"></div>
   <div class="cr-grid-bg" id="crGridBg"></div>
+  <div id="fx-layer"></div>
   <div class="cr-inner">
 
     <div class="cr-topbar">
@@ -235,6 +262,10 @@ const THEMES = [
   { id:'toxic',     bg:'#030f00', sc:'#aaff00', name:'TOXIC',     grid:'rgba(170,255,0,.06)'   },
   { id:'ocean',     bg:'#00080f', sc:'#00e5cc', name:'OCEAN',     grid:'rgba(0,229,204,.06)'   },
   { id:'ghost',     bg:'#0a0a0f', sc:'#c8c8ff', name:'GHOST',     grid:'rgba(200,200,255,.05)' },
+  { id:'stars',     bg:'#00000d', sc:'#fffbe6', name:'STARS',     grid:'rgba(255,251,230,.04)' },
+  { id:'rain',      bg:'#000814', sc:'#48cae4', name:'RAIN',      grid:'rgba(72,202,228,.05)'  },
+  { id:'lava',      bg:'#0f0200', sc:'#ff4500', name:'LAVA',      grid:'rgba(255,69,0,.07)'    },
+  { id:'aurora',    bg:'#000d08', sc:'#80ffdb', name:'AURORA',    grid:'rgba(128,255,219,.05)' },
 ];
 
 let diceCount    = 3;
@@ -269,6 +300,82 @@ function drawGrid(color) {
 }
 
 
+
+
+
+/* ── FX Layer Engine ── */
+const fxLayer = document.getElementById('fx-layer');
+let _fxTimer = null;
+
+function _clearFX() {
+  if (_fxTimer) { clearInterval(_fxTimer); _fxTimer = null; }
+  fxLayer.innerHTML = '';
+  fxLayer.style.display = 'none';
+}
+
+function _fxStars() {
+  fxLayer.style.display = 'block';
+  // static stars
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = .5 + Math.random() * 2.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${1.5+Math.random()*3}s;animation-delay:${Math.random()*4}s`;
+    fxLayer.appendChild(s);
+  }
+  // shooting stars every 2.5s
+  _fxTimer = setInterval(() => {
+    const sh = document.createElement('div');
+    sh.className = 'star-shoot';
+    sh.style.cssText = `top:${Math.random()*50}%;left:${Math.random()*60}%;animation-duration:${.6+Math.random()*.6}s`;
+    fxLayer.appendChild(sh);
+    sh.addEventListener('animationend', () => sh.remove());
+  }, 2500);
+}
+
+function _fxRain() {
+  fxLayer.style.display = 'block';
+  for (let i = 0; i < 80; i++) {
+    const r = document.createElement('div');
+    r.className = 'raindrop';
+    const h = 12 + Math.random() * 22;
+    r.style.cssText = `height:${h}px;left:${Math.random()*100}%;animation-duration:${.6+Math.random()*.8}s;animation-delay:${Math.random()*2}s`;
+    fxLayer.appendChild(r);
+  }
+}
+
+function _fxLava() {
+  fxLayer.style.display = 'block';
+  const colors = ['#ff4500','#ff6a00','#ff0000','#ff8c00','#cc2200'];
+  for (let i = 0; i < 14; i++) {
+    const b = document.createElement('div');
+    b.className = 'lava-blob';
+    const sz = 80 + Math.random() * 140;
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    b.style.cssText = `width:${sz}px;height:${sz}px;background:${col};bottom:${-20+Math.random()*60}%;left:${Math.random()*100}%;opacity:.6;animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*3}s`;
+    fxLayer.appendChild(b);
+  }
+}
+
+function _fxAurora() {
+  fxLayer.style.display = 'block';
+  const bands = [
+    {color:'rgba(0,255,180,.22)',  top:'8%',  h:'120px', dur:'7s',  delay:'0s'  },
+    {color:'rgba(0,200,255,.18)',  top:'18%', h:'90px',  dur:'9s',  delay:'2s'  },
+    {color:'rgba(128,255,100,.15)',top:'28%', h:'70px',  dur:'11s', delay:'1s'  },
+    {color:'rgba(80,100,255,.14)', top:'38%', h:'60px',  dur:'8s',  delay:'3s'  },
+    {color:'rgba(0,255,180,.12)',  top:'48%', h:'50px',  dur:'13s', delay:'1.5s'},
+  ];
+  bands.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'aurora-band';
+    el.style.cssText = `top:${b.top};height:${b.h};background:${b.color};animation-duration:${b.dur};animation-delay:${b.delay}`;
+    fxLayer.appendChild(el);
+  });
+}
+
+const FX_MAP = { stars: _fxStars, rain: _fxRain, lava: _fxLava, aurora: _fxAurora };
+
 function applyTheme(id) {
   currentTheme = id;
   const t    = THEMES.find(x => x.id === id);
@@ -282,6 +389,7 @@ function applyTheme(id) {
   root.style.setProperty('--bgc', t.bg);
   drawGrid(t.grid);
   document.querySelectorAll('.cr-theme-card').forEach(c => c.classList.toggle('sel', c.dataset.id === id));
+  _clearFX(); if (FX_MAP[id]) FX_MAP[id]();
 }
 
 THEMES.forEach(t => {
