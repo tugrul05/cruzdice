@@ -127,6 +127,24 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 /* AURORA */
 .aurora-band{position:absolute;left:-20%;width:140%;border-radius:50%;filter:blur(38px);animation:auroraSway ease-in-out infinite}
 @keyframes auroraSway{0%,100%{transform:translateX(0) scaleY(1);opacity:.28}33%{transform:translateX(6%) scaleY(1.18);opacity:.42}66%{transform:translateX(-5%) scaleY(.88);opacity:.22}}
+
+/* PULSE rings */
+.pulse-ring{position:absolute;border-radius:50%;border:2px solid rgba(204,0,255,.5);animation:pulseExpand ease-out infinite}
+@keyframes pulseExpand{0%{transform:scale(0);opacity:.9}100%{transform:scale(4);opacity:0}}
+
+/* GLITCH scanlines + flicker */
+.glitch-line{position:absolute;left:0;width:100%;background:rgba(0,255,65,.08);animation:glitchScan linear infinite}
+@keyframes glitchScan{0%{top:-4px;opacity:0}5%{opacity:1}95%{opacity:.6}100%{top:110%;opacity:0}}
+.glitch-block{position:absolute;background:rgba(0,255,65,.12);animation:glitchFlick steps(1) infinite}
+@keyframes glitchFlick{0%,100%{opacity:0}50%{opacity:1}}
+
+/* DEEP bubbles */
+.bubble{position:absolute;border-radius:50%;border:1px solid rgba(0,102,255,.4);background:rgba(0,102,255,.06);animation:bubbleRise ease-in infinite}
+@keyframes bubbleRise{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.8}90%{opacity:.5}100%{transform:translateY(-110vh) scale(1.4);opacity:0}}
+
+/* PLASMA waves */
+.plasma-wave{position:absolute;left:-10%;width:120%;border-radius:50%;filter:blur(30px);animation:plasmaFloat ease-in-out infinite}
+@keyframes plasmaFloat{0%,100%{transform:translateY(0) scaleX(1);opacity:.25}50%{transform:translateY(-30px) scaleX(1.06);opacity:.45}}
 </style>
 </head>
 <body>
@@ -266,6 +284,10 @@ const THEMES = [
   { id:'rain',      bg:'#000814', sc:'#48cae4', name:'RAIN',      grid:'rgba(72,202,228,.05)'  },
   { id:'lava',      bg:'#0f0200', sc:'#ff4500', name:'LAVA',      grid:'rgba(255,69,0,.07)'    },
   { id:'aurora',    bg:'#000d08', sc:'#80ffdb', name:'AURORA',    grid:'rgba(128,255,219,.05)' },
+  { id:'pulse',     bg:'#05000f', sc:'#cc00ff', name:'PULSE',     grid:'rgba(204,0,255,.06)'   },
+  { id:'glitch',    bg:'#000a00', sc:'#00ff41', name:'GLITCH',    grid:'rgba(0,255,65,.06)'    },
+  { id:'deep',      bg:'#000008', sc:'#0066ff', name:'DEEP',      grid:'rgba(0,102,255,.06)'   },
+  { id:'plasma',    bg:'#0a0010', sc:'#ff00aa', name:'PLASMA',    grid:'rgba(255,0,170,.06)'   },
 ];
 
 let diceCount    = 3;
@@ -374,7 +396,75 @@ function _fxAurora() {
   });
 }
 
-const FX_MAP = { stars: _fxStars, rain: _fxRain, lava: _fxLava, aurora: _fxAurora };
+
+function _fxPulse() {
+  fxLayer.style.display = 'block';
+  const cx = ['40%','60%','25%','75%','50%'];
+  const cy = ['30%','60%','70%','20%','50%'];
+  for (let i = 0; i < 5; i++) {
+    const ring = document.createElement('div');
+    ring.className = 'pulse-ring';
+    const sz = 60 + Math.random() * 80;
+    ring.style.cssText = `width:${sz}px;height:${sz}px;left:${cx[i]};top:${cy[i]};animation-duration:${2+Math.random()*2}s;animation-delay:${i*0.6}s`;
+    fxLayer.appendChild(ring);
+  }
+  _fxTimer = setInterval(() => {
+    const r = document.createElement('div');
+    r.className = 'pulse-ring';
+    const sz = 40 + Math.random() * 100;
+    r.style.cssText = `width:${sz}px;height:${sz}px;left:${10+Math.random()*80}%;top:${10+Math.random()*80}%;animation-duration:${1.8+Math.random()*1.8}s`;
+    fxLayer.appendChild(r);
+    r.addEventListener('animationend', () => r.remove());
+  }, 400);
+}
+
+function _fxGlitch() {
+  fxLayer.style.display = 'block';
+  for (let i = 0; i < 6; i++) {
+    const line = document.createElement('div');
+    line.className = 'glitch-line';
+    const h = 2 + Math.random() * 4;
+    line.style.cssText = `height:${h}px;animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*3}s`;
+    fxLayer.appendChild(line);
+  }
+  _fxTimer = setInterval(() => {
+    const b = document.createElement('div');
+    b.className = 'glitch-block';
+    b.style.cssText = `width:${20+Math.random()*120}px;height:${4+Math.random()*12}px;left:${Math.random()*80}%;top:${Math.random()*100}%;animation-duration:${0.1+Math.random()*0.2}s`;
+    fxLayer.appendChild(b);
+    setTimeout(() => b.remove(), 300);
+  }, 200);
+}
+
+function _fxDeep() {
+  fxLayer.style.display = 'block';
+  for (let i = 0; i < 35; i++) {
+    const b = document.createElement('div');
+    b.className = 'bubble';
+    const sz = 6 + Math.random() * 28;
+    b.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;bottom:${-10+Math.random()*20}%;animation-duration:${4+Math.random()*7}s;animation-delay:${Math.random()*5}s`;
+    fxLayer.appendChild(b);
+  }
+}
+
+function _fxPlasma() {
+  fxLayer.style.display = 'block';
+  const bands = [
+    {color:'rgba(255,0,170,.2)',  top:'10%', h:'140px', dur:'6s',  delay:'0s'  },
+    {color:'rgba(180,0,255,.18)', top:'28%', h:'110px', dur:'8s',  delay:'1.5s'},
+    {color:'rgba(255,0,100,.15)', top:'48%', h:'90px',  dur:'7s',  delay:'0.8s'},
+    {color:'rgba(120,0,255,.16)', top:'65%', h:'100px', dur:'9s',  delay:'2s'  },
+    {color:'rgba(255,50,200,.13)',top:'80%', h:'80px',  dur:'5s',  delay:'1s'  },
+  ];
+  bands.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'plasma-wave';
+    el.style.cssText = `top:${b.top};height:${b.h};background:${b.color};animation-duration:${b.dur};animation-delay:${b.delay}`;
+    fxLayer.appendChild(el);
+  });
+}
+
+const FX_MAP = { stars: _fxStars, rain: _fxRain, lava: _fxLava, aurora: _fxAurora, pulse: _fxPulse, glitch: _fxGlitch, deep: _fxDeep, plasma: _fxPlasma };
 
 function applyTheme(id) {
   currentTheme = id;
@@ -535,6 +625,17 @@ function roll() {
 }
 
 
+
+
+/* ── Pause animations when tab hidden ── */
+document.addEventListener('visibilitychange', () => {
+  const els = document.querySelectorAll('#fx-layer *, .ep, .em-float');
+  els.forEach(el => {
+    el.style.animationPlayState = document.hidden ? 'paused' : 'running';
+  });
+  // Also pause/resume fx-layer itself
+  if (fxLayer) fxLayer.style.animationPlayState = document.hidden ? 'paused' : 'running';
+});
 
 rollBtn.addEventListener('click', roll);
 
