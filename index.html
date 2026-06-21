@@ -26,7 +26,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-logo span{color:#fff;text-shadow:0 0 8px #fff,0 0 24px var(--s)}
 .cr-hline{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--s),transparent);box-shadow:0 0 6px var(--s)}
 .cr-topbar{width:100%;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.cr-online{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:var(--s);opacity:.75;margin-right:auto}
+.cr-online{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:var(--s);opacity:.75}
 .cr-online-dot{width:8px;height:8px;border-radius:50%;background:#00ff87;box-shadow:0 0 6px #00ff87,0 0 12px #00ff87;animation:opulse 2s ease-in-out infinite;flex-shrink:0}
 .cr-online-dot.offline{background:#555;box-shadow:none;animation:none}
 @keyframes opulse{0%,100%{opacity:1;box-shadow:0 0 6px #00ff87,0 0 12px #00ff87}50%{opacity:.4;box-shadow:0 0 2px #00ff87}}
@@ -162,6 +162,11 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
   <div class="cr-inner">
 
     <div class="cr-topbar">
+      <button class="cr-tbtn" id="btnWheel" title="Toggle Wheel / Dice" style="margin-right:auto;display:flex;align-items:center;gap:6px">
+        <svg id="iconWheel" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="var(--s)" stroke-width="1.8"/><circle cx="12" cy="12" r="1.6" fill="var(--s)"/><line x1="12" y1="3" x2="12" y2="12" stroke="var(--s)" stroke-width="1.8"/><line x1="12" y1="12" x2="18.5" y2="8.2" stroke="var(--s)" stroke-width="1.8"/><line x1="12" y1="12" x2="18.5" y2="15.8" stroke="var(--s)" stroke-width="1.8"/><line x1="12" y1="12" x2="12" y2="21" stroke="var(--s)" stroke-width="1.8"/><line x1="12" y1="12" x2="5.5" y2="15.8" stroke="var(--s)" stroke-width="1.8"/><line x1="12" y1="12" x2="5.5" y2="8.2" stroke="var(--s)" stroke-width="1.8"/></svg>
+        <svg id="iconDice" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="var(--s)" stroke-width="1.8"/><circle cx="8" cy="8" r="1.4" fill="var(--s)"/><circle cx="16" cy="8" r="1.4" fill="var(--s)"/><circle cx="8" cy="16" r="1.4" fill="var(--s)"/><circle cx="16" cy="16" r="1.4" fill="var(--s)"/><circle cx="12" cy="12" r="1.4" fill="var(--s)"/></svg>
+        <span id="wheelBtnLabel">WHEEL</span>
+      </button>
       <div class="cr-online">
         <div class="cr-online-dot" id="onlineDot"></div>
         <span id="onlineCount">-- ONLINE</span>
@@ -181,7 +186,7 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
     </div>
 
     <header>
-      <div class="cr-logo">CRUZ <span>DICE</span></div>
+      <div class="cr-logo">CRUZ <span id="logoSuffix">DICE</span></div>
       <div class="cr-hline"></div>
     </header>
 
@@ -193,21 +198,38 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
       </div>
     </div>
 
-    <div class="cr-panel">
-      <div class="cr-plbl">[ DICE COUNT ]</div>
-      <div class="cr-crow" id="crCountRow"></div>
-      <div class="cr-plbl">[ COLOR POOL ]</div>
-      <div class="cr-clrow" id="crColorRow"></div>
+
+    <!-- ── WHEEL SCREEN ── -->
+    <div id="wheelScreen" style="display:none;width:100%;flex-direction:column;align-items:center;gap:18px">
+      <div style="position:relative;width:280px;height:280px;display:flex;align-items:center;justify-content:center">
+        <div id="wheelPointer" style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:24px solid var(--s);filter:drop-shadow(0 0 6px var(--s));z-index:5"></div>
+        <svg id="wheelSvg" viewBox="0 0 300 300" style="width:100%;height:100%;filter:drop-shadow(0 0 18px var(--sp))">
+          <g id="wheelGroup" style="transform-origin:150px 150px;transition:transform 4s cubic-bezier(.17,.67,.16,.99)"></g>
+        </svg>
+        <div style="position:absolute;width:54px;height:54px;border-radius:50%;background:var(--bgc);border:2px solid var(--s);box-shadow:0 0 14px var(--s);z-index:4"></div>
+      </div>
+
+      <button class="cr-roll" id="spinBtn" style="max-width:280px">SPIN</button>
+      <div class="cr-rbar" id="wheelResultBar">&nbsp;</div>
     </div>
 
-    <button class="cr-roll" id="crRollBtn">ROLL</button>
-    <div class="cr-rbar" id="crRBar">&nbsp;</div>
+    <div id="diceScreen" style="display:flex;flex-direction:column;align-items:center;gap:18px;width:100%">
+      <div class="cr-panel" id="dicePanel">
+        <div class="cr-plbl">[ DICE COUNT ]</div>
+        <div class="cr-crow" id="crCountRow"></div>
+        <div class="cr-plbl">[ COLOR POOL ]</div>
+        <div class="cr-clrow" id="crColorRow"></div>
+      </div>
 
-    <div class="cr-area" id="crArea">
-      <div class="cr-empty">_ AWAITING ROLL _</div>
+      <button class="cr-roll" id="crRollBtn">ROLL</button>
+      <div class="cr-rbar" id="crRBar">&nbsp;</div>
+
+      <div class="cr-area" id="crArea">
+        <div class="cr-empty">_ AWAITING ROLL _</div>
+      </div>
     </div>
 
-    <div class="cr-footer">CRUZ DICE &nbsp;·&nbsp; v5.4 &nbsp;·&nbsp; SYSTEM READY</div>
+    <div class="cr-footer">CRUZ DICE &nbsp;·&nbsp; v5.5 &nbsp;·&nbsp; SYSTEM READY</div>
   </div>
 </div>
 
@@ -226,7 +248,12 @@ document.addEventListener('keydown', e => {
     (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
     (e.ctrlKey && ['U','u','S','s'].includes(e.key))
   ) { e.preventDefault(); return false; }
-  if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); roll(); }
+  if (e.code === 'Space' || e.code === 'Enter') {
+    e.preventDefault();
+    const wheelVisible = document.getElementById('wheelScreen') && document.getElementById('wheelScreen').style.display === 'flex';
+    if (wheelVisible) { if (typeof spinWheel === 'function') spinWheel(); }
+    else { roll(); }
+  }
 });
 
 // ── Firebase Online Presence ──
@@ -658,6 +685,181 @@ document.addEventListener('visibilitychange', () => {
   // Also pause/resume fx-layer itself
   if (fxLayer) fxLayer.style.animationPlayState = document.hidden ? 'paused' : 'running';
 });
+
+
+/* ── WHEEL OF FORTUNE ── */
+const WHEEL_SLICES = [
+  { label:'RED',    color:'#ff003c' },
+  { label:'ORANGE', color:'#ff6a00' },
+  { label:'YELLOW', color:'#ffe600' },
+  { label:'GREEN',  color:'#00ff87' },
+  { label:'BLUE',   color:'#00cfff' },
+  { label:'PURPLE', color:'#bf00ff' },
+];
+
+const wheelGroup     = document.getElementById('wheelGroup');
+const spinBtn        = document.getElementById('spinBtn');
+const wheelResultBar = document.getElementById('wheelResultBar');
+const btnWheel       = document.getElementById('btnWheel');
+const wheelScreen    = document.getElementById('wheelScreen');
+const diceScreen     = document.getElementById('diceScreen');
+const iconWheel      = document.getElementById('iconWheel');
+const iconDice       = document.getElementById('iconDice');
+const wheelBtnLabel  = document.getElementById('wheelBtnLabel');
+
+let wheelRotation = 0;
+let wheelSpinning = false;
+
+function buildWheel() {
+  wheelGroup.innerHTML = '';
+  const n = WHEEL_SLICES.length;
+  const angleStep = 360 / n;
+  const cx = 150, cy = 150, r = 145;
+
+  WHEEL_SLICES.forEach((slice, i) => {
+    const startAngle = i * angleStep;
+    const endAngle   = startAngle + angleStep;
+    const startRad = (startAngle - 90) * Math.PI / 180;
+    const endRad   = (endAngle   - 90) * Math.PI / 180;
+    const x1 = cx + r * Math.cos(startRad);
+    const y1 = cy + r * Math.sin(startRad);
+    const x2 = cx + r * Math.cos(endRad);
+    const y2 = cy + r * Math.sin(endRad);
+
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', `M ${cx} ${cy} L ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} Z`);
+    path.setAttribute('fill', slice.color);
+    path.setAttribute('fill-opacity', '0.85');
+    path.setAttribute('stroke', '#000');
+    path.setAttribute('stroke-width', '1.5');
+    wheelGroup.appendChild(path);
+
+    // label
+    const midAngle = (startAngle + endAngle) / 2;
+    const midRad = (midAngle - 90) * Math.PI / 180;
+    const lx = cx + (r * 0.62) * Math.cos(midRad);
+    const ly = cy + (r * 0.62) * Math.sin(midRad);
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('x', lx);
+    text.setAttribute('y', ly);
+    text.setAttribute('fill', slice.color === '#ffe600' ? '#000' : '#fff');
+    text.setAttribute('font-size', '10.5');
+    text.setAttribute('font-weight', 'bold');
+    text.setAttribute('font-family', "'Share Tech Mono', monospace");
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('transform', `rotate(${midAngle}, ${lx}, ${ly})`);
+    text.textContent = slice.label;
+    wheelGroup.appendChild(text);
+  });
+}
+
+
+function playWheelSpin() {
+  if (soundMuted) return;
+  try {
+    const ctx = getCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    const now = ctx.currentTime;
+    const totalDuration = 4.0; // matches wheel CSS transition duration
+    const tickCount = 28; // number of ticks across the spin
+    for (let i = 0; i < tickCount; i++) {
+      // ease-out spacing: ticks start fast, slow down toward the end
+      const progress = i / tickCount;
+      const eased = 1 - Math.pow(1 - progress, 2.2);
+      const t = now + eased * totalDuration;
+
+      const sz  = ctx.sampleRate * 0.018;
+      const buf = ctx.createBuffer(1, sz, ctx.sampleRate);
+      const d   = buf.getChannelData(0);
+      for (let j = 0; j < sz; j++) d[j] = Math.random() * 2 - 1;
+      const src = ctx.createBufferSource(); src.buffer = buf;
+      const bp  = ctx.createBiquadFilter(); bp.type = 'bandpass';
+      bp.frequency.value = 1400 + Math.random() * 300;
+      bp.Q.value = 3;
+      const g = ctx.createGain();
+      const vol = 0.4 - progress * 0.18; // ticks get a bit softer near the end
+      g.gain.setValueAtTime(vol, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
+      src.connect(bp); bp.connect(g); g.connect(ctx.destination);
+      src.start(t); src.stop(t + 0.03);
+    }
+
+    // final "ding" chime when wheel stops
+    const dingTime = now + totalDuration + 0.05;
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gDing = ctx.createGain();
+    osc1.type = 'sine'; osc1.frequency.setValueAtTime(880, dingTime);
+    osc2.type = 'sine'; osc2.frequency.setValueAtTime(1320, dingTime);
+    gDing.gain.setValueAtTime(0.0001, dingTime);
+    gDing.gain.exponentialRampToValueAtTime(0.35, dingTime + 0.02);
+    gDing.gain.exponentialRampToValueAtTime(0.001, dingTime + 0.9);
+    osc1.connect(gDing); osc2.connect(gDing); gDing.connect(ctx.destination);
+    osc1.start(dingTime); osc1.stop(dingTime + 0.95);
+    osc2.start(dingTime); osc2.stop(dingTime + 0.95);
+  } catch(e) {}
+}
+
+function spinWheel() {
+  if (wheelSpinning) return;
+  wheelSpinning = true;
+  spinBtn.disabled = true;
+  wheelResultBar.innerHTML = '&nbsp;';
+
+  const n = WHEEL_SLICES.length;
+  const angleStep = 360 / n;
+  const winnerIndex = Math.floor(Math.random() * n);
+  // Wheel must land so winnerIndex slice center is at top (pointer position)
+  const targetSliceCenter = winnerIndex * angleStep + angleStep / 2;
+  const extraSpins = 5 + Math.floor(Math.random() * 3); // 5-7 full turns
+  const finalRotation = wheelRotation + extraSpins * 360 + (360 - targetSliceCenter) - (wheelRotation % 360);
+
+  wheelRotation = finalRotation;
+  wheelGroup.style.transform = `rotate(${wheelRotation}deg)`;
+
+  playWheelSpin();
+
+  setTimeout(() => {
+    wheelSpinning = false;
+    spinBtn.disabled = false;
+    const winner = WHEEL_SLICES[winnerIndex];
+    wheelResultBar.innerHTML = `RESULT: <strong style="color:${winner.color}">${winner.label}</strong>`;
+  }, 4100);
+}
+
+let onWheelScreen = false;
+
+function showWheel() {
+  diceScreen.style.display = 'none';
+  wheelScreen.style.display = 'flex';
+  settingsPanel.style.display = 'none';
+  btnSettings.classList.remove('on');
+  iconWheel.style.display = 'none';
+  iconDice.style.display  = 'inline';
+  wheelBtnLabel.textContent = 'DICE';
+  document.getElementById('logoSuffix').textContent = 'WHEEL';
+  onWheelScreen = true;
+}
+
+function showDice() {
+  wheelScreen.style.display = 'none';
+  diceScreen.style.display = 'flex';
+  iconWheel.style.display = 'inline';
+  iconDice.style.display  = 'none';
+  wheelBtnLabel.textContent = 'WHEEL';
+  document.getElementById('logoSuffix').textContent = 'DICE';
+  onWheelScreen = false;
+}
+
+function toggleWheelDice() {
+  onWheelScreen ? showDice() : showWheel();
+}
+
+btnWheel.addEventListener('click', toggleWheelDice);
+spinBtn.addEventListener('click', spinWheel);
+
+buildWheel();
 
 rollBtn.addEventListener('click', roll);
 
