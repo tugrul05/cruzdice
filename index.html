@@ -643,14 +643,54 @@ function playRoll() {
   } catch(e) {}
 }
 
+function _rndColor(pool) {
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function pickColors(pool, count) {
+  // Special distribution ONLY for 4 dice:
+  // ~55% chance → exactly 2 same + 2 different  (e.g. R R B G)
+  // ~30% chance → exactly 3 same + 1 different  (e.g. R R R B)
+  // ~15% chance → all 4 different               (e.g. R B G Y)
+  // Never → all 4 same
+  if (count === 4 && pool.length >= 2) {
+    const r = Math.random();
+    let groups;
+    if      (r < 0.55) groups = [2, 1, 1];  // %55 → 2 aynı + 2 farklı
+    else if (r < 0.80) groups = [3, 1];      // %25 → 3 aynı + 1 farklı
+    else if (r < 0.97) groups = [1, 1, 1, 1];// %17 → 4 farklı
+    else               groups = [4];          // %3  → 4 aynı
+
+    const usedIds = new Set();
+    const result  = [];
+    for (const n of groups) {
+      let c, tries = 0;
+      // For groups=[4] (all same), allow repeating the same color
+      const mustBeUnique = groups.length > 1;
+      do { c = _rndColor(pool); tries++; } while (mustBeUnique && usedIds.has(c.id) && tries < 30);
+      usedIds.add(c.id);
+      for (let k = 0; k < n; k++) result.push(c);
+    }
+    // shuffle so pairs aren't always at the start
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+  // All other dice counts → fully random
+  return Array.from({length: count}, () => _rndColor(pool));
+}
+
 function roll() {
   const pool = COLORS.filter(c => enabled.has(c.id));
   if (!pool.length) { warn('NO COLORS ACTIVE'); return; }
   rollBtn.classList.remove('rolling'); void rollBtn.offsetWidth; rollBtn.classList.add('rolling');
   area.innerHTML = '';
   playRoll();
+  const colorSeq = pickColors(pool, diceCount);
   for (let i = 0; i < diceCount; i++) {
-    const color = pool[Math.floor(Math.random() * pool.length)];
+    const color = colorSeq[i];
     const r  = parseInt(color.hex.slice(1,3), 16);
     const g2 = parseInt(color.hex.slice(3,5), 16);
     const b2 = parseInt(color.hex.slice(5,7), 16);
@@ -691,12 +731,12 @@ document.addEventListener('visibilitychange', () => {
 
 /* ── WHEEL OF FORTUNE ── */
 const WHEEL_SLICES = [
-  { label:'RED',    color:'#ff003c' },
-  { label:'ORANGE', color:'#ff6a00' },
-  { label:'YELLOW', color:'#ffe600' },
-  { label:'GREEN',  color:'#00ff87' },
-  { label:'BLUE',   color:'#00cfff' },
-  { label:'PURPLE', color:'#bf00ff' },
+  { label:'W', color:'#00ff87' },
+  { label:'L', color:'#ff003c' },
+  { label:'W', color:'#00ff87' },
+  { label:'L', color:'#ff003c' },
+  { label:'W', color:'#00ff87' },
+  { label:'L', color:'#ff003c' },
 ];
 
 const wheelGroup     = document.getElementById('wheelGroup');
@@ -744,8 +784,8 @@ function buildWheel() {
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', lx);
     text.setAttribute('y', ly);
-    text.setAttribute('fill', slice.color === '#ffe600' ? '#000' : '#fff');
-    text.setAttribute('font-size', '10.5');
+    text.setAttribute('fill', '#fff');
+    text.setAttribute('font-size', '22');
     text.setAttribute('font-weight', 'bold');
     text.setAttribute('font-family', "'Share Tech Mono', monospace");
     text.setAttribute('text-anchor', 'middle');
@@ -827,7 +867,8 @@ function spinWheel() {
     wheelSpinning = false;
     spinBtn.disabled = false;
     const winner = WHEEL_SLICES[winnerIndex];
-    const _wheelHTML = `RESULT: <strong style="color:${winner.color}">${winner.label}</strong>`;
+    const _winColor = winner.label === 'W' ? '#00ff87' : '#ff003c';
+    const _wheelHTML = `RESULT: <strong style="color:${_winColor};text-shadow:0 0 8px ${_winColor}">${winner.label === 'W' ? 'WIN' : 'LOSE'}</strong>`;
     wheelResultBar.innerHTML = _wheelHTML;
     _lastWheelResultHTML = _wheelHTML;
   }, 4100);
