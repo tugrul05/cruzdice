@@ -657,9 +657,9 @@ function pickColors(pool, count) {
     const r = Math.random();
     let groups;
     if      (r < 0.55) groups = [2, 1, 1];  // %55 → 2 aynı + 2 farklı
-    else if (r < 0.80) groups = [3, 1];      // %25 → 3 aynı + 1 farklı
-    else if (r < 0.97) groups = [1, 1, 1, 1];// %17 → 4 farklı
-    else               groups = [4];          // %3  → 4 aynı
+    else if (r < 0.79) groups = [3, 1];      // %24 → 3 aynı + 1 farklı
+    else if (r < 0.99) groups = [1, 1, 1, 1];// %20 → 4 farklı
+    else               groups = [4];          // %1  → 4 aynı
 
     const usedIds = new Set();
     const result  = [];
