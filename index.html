@@ -26,9 +26,6 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-logo span{color:#fff;text-shadow:0 0 8px #fff,0 0 24px var(--s)}
 .cr-hline{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--s),transparent);box-shadow:0 0 6px var(--s)}
 .cr-topbar{width:100%;display:flex;gap:8px;justify-content:flex-end;align-items:center}
-.cr-online{display:flex;align-items:center;gap:7px;font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:var(--s);opacity:.75}
-.cr-online-dot{width:8px;height:8px;border-radius:50%;background:#00ff87;box-shadow:0 0 6px #00ff87,0 0 12px #00ff87;animation:opulse 2s ease-in-out infinite;flex-shrink:0}
-.cr-online-dot.offline{background:#555;box-shadow:none;animation:none}
 @keyframes opulse{0%,100%{opacity:1;box-shadow:0 0 6px #00ff87,0 0 12px #00ff87}50%{opacity:.4;box-shadow:0 0 2px #00ff87}}
 .cr-tbtn{padding:7px 14px;border:1px solid var(--s);background:transparent;color:var(--s);font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:.2em;cursor:pointer;border-radius:3px;transition:all .2s;box-shadow:0 0 5px var(--sp)}
 .cr-tbtn:hover{box-shadow:0 0 14px var(--s);background:rgba(0,0,0,.2)}
@@ -167,10 +164,6 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
         <svg id="iconDice" width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="var(--s)" stroke-width="1.8"/><circle cx="8" cy="8" r="1.4" fill="var(--s)"/><circle cx="16" cy="8" r="1.4" fill="var(--s)"/><circle cx="8" cy="16" r="1.4" fill="var(--s)"/><circle cx="16" cy="16" r="1.4" fill="var(--s)"/><circle cx="12" cy="12" r="1.4" fill="var(--s)"/></svg>
         <span id="wheelBtnLabel">WHEEL</span>
       </button>
-      <div class="cr-online">
-        <div class="cr-online-dot" id="onlineDot"></div>
-        <span id="onlineCount">-- ONLINE</span>
-      </div>
       <a href="https://discord.gg/rexplace" target="_blank" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border:1px solid var(--s);border-radius:3px;box-shadow:0 0 5px var(--sp);text-decoration:none;transition:all .2s;flex-shrink:0" onmouseover="this.style.boxShadow='0 0 14px var(--s)'" onmouseout="this.style.boxShadow='0 0 5px var(--sp)'">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.054a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" fill="var(--s)"/>
@@ -245,8 +238,8 @@ document.addEventListener('dragstart',   e => e.preventDefault());
 document.addEventListener('keydown', e => {
   if (
     e.key === 'F12' ||
-    (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) ||
-    (e.ctrlKey && ['U','u','S','s'].includes(e.key))
+    (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c','K','k','M','m'].includes(e.key)) ||
+    (e.ctrlKey && ['U','u','S','s','A','a','P','p'].includes(e.key))
   ) { e.preventDefault(); return false; }
   if (e.code === 'Space' || e.code === 'Enter') {
     e.preventDefault();
@@ -256,47 +249,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// ── Firebase Online Presence ──
-(function initFirebase() {
-  try {
-    const firebaseConfig = {
-      apiKey:            "AIzaSyC0chxlBsshI6x4UKMEj_Mp_LGXVCohFNs",
-      authDomain:        "cruz-dice.firebaseapp.com",
-      databaseURL:       "https://cruz-dice-default-rtdb.firebaseio.com",
-      projectId:         "cruz-dice",
-      storageBucket:     "cruz-dice.firebasestorage.app",
-      messagingSenderId: "148779359325",
-      appId:             "1:148779359325:web:efe41c4ffb09f166b741b4"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db         = firebase.database();
-    const onlineRef  = db.ref('online');
-    const connRef    = db.ref('.info/connected');
-
-    connRef.on('value', snap => {
-      if (snap.val() === true) {
-        const myRef = onlineRef.push(true);
-        myRef.onDisconnect().remove();
-      }
-    });
-
-    onlineRef.on('value', snap => {
-      const count   = snap.numChildren();
-      const el      = document.getElementById('onlineCount');
-      const dot     = document.getElementById('onlineDot');
-      if (el)  el.textContent = count + ' ONLINE';
-      if (dot) dot.classList.remove('offline');
-    });
-
-  } catch(e) {
-    // Firebase not available (file:// protocol) — show offline state
-    const el  = document.getElementById('onlineCount');
-    const dot = document.getElementById('onlineDot');
-    if (el)  el.textContent = '-- ONLINE';
-    if (dot) dot.classList.add('offline');
-  }
-})();
 
 // ── Colors & Themes ──
 const COLORS = [
@@ -927,6 +879,26 @@ function _protectElement(el, getAuthoritativeHTML) {
 
 _protectElement(rBar,             () => _lastDiceResultHTML);
 _protectElement(wheelResultBar,   () => _lastWheelResultHTML);
+
+
+// ── DevTools open detection ──
+(function(){
+  let devOpen=false;
+  setInterval(()=>{
+    const wD=window.outerWidth-window.innerWidth;
+    const hD=window.outerHeight-window.innerHeight;
+    const opened=wD>150||hD>150;
+    if(opened&&!devOpen){
+      devOpen=true;
+      document.body.style.filter='blur(20px)';
+      document.body.style.pointerEvents='none';
+    } else if(!opened&&devOpen){
+      devOpen=false;
+      document.body.style.filter='';
+      document.body.style.pointerEvents='';
+    }
+  },800);
+})();
 
 rollBtn.addEventListener('click', roll);
 
