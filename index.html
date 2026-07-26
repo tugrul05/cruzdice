@@ -608,9 +608,9 @@ function pickColors(pool, count) {
   if (count === 4 && pool.length >= 2) {
     const r = Math.random();
     let groups;
-    if      (r < 0.47) groups = [2, 1, 1];   // %47 → 2 aynı + 2 farklı
-    else if (r < 0.69) groups = [3, 1];       // %22 → 3 aynı + 1 farklı
-    else if (r < 0.89) groups = [1, 1, 1, 1]; // %20 → 4 farklı
+    if      (r < 0.45) groups = [2, 1, 1];   // %45 → 2 aynı + 2 farklı
+    else if (r < 0.67) groups = [3, 1];       // %22 → 3 aynı + 1 farklı
+    else if (r < 0.89) groups = [1, 1, 1, 1]; // %22 → 4 farklı
     else if (r < 0.99) groups = [2, 2];       // %10 → 2 aynı + 2 aynı
     else               groups = [4];           // %1  → 4 aynı
 
