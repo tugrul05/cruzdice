@@ -684,12 +684,9 @@ document.addEventListener('visibilitychange', () => {
 
 /* ── WHEEL OF FORTUNE ── */
 const WHEEL_SLICES = [
-  { label:'W', color:'#00ff87' },
-  { label:'L', color:'#ff003c' },
-  { label:'W', color:'#00ff87' },
-  { label:'L', color:'#ff003c' },
-  { label:'W', color:'#00ff87' },
-  { label:'L', color:'#ff003c' },
+  { label:'BLUE',  color:'#0066ff' },
+  { label:'LIGHT', color:'#7dd4fc' },
+  { label:'DARK',  color:'#0a1628' },
 ];
 
 const wheelGroup     = document.getElementById('wheelGroup');
@@ -737,7 +734,7 @@ function buildWheel() {
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('x', lx);
     text.setAttribute('y', ly);
-    text.setAttribute('fill', '#fff');
+    text.setAttribute('fill', slice.label === 'LIGHT' ? '#0a1628' : '#ffffff');
     text.setAttribute('font-size', '22');
     text.setAttribute('font-weight', 'bold');
     text.setAttribute('font-family', "'Share Tech Mono', monospace");
@@ -820,8 +817,7 @@ function spinWheel() {
     wheelSpinning = false;
     spinBtn.disabled = false;
     const winner = WHEEL_SLICES[winnerIndex];
-    const _winColor = winner.label === 'W' ? '#00ff87' : '#ff003c';
-    const _wheelHTML = `RESULT: <strong style="color:${_winColor};text-shadow:0 0 8px ${_winColor}">${winner.label === 'W' ? 'WIN' : 'LOSE'}</strong>`;
+    const _wheelHTML = `RESULT: <strong style="color:${winner.color};text-shadow:0 0 8px ${winner.color}">${winner.label}</strong>`;
     wheelResultBar.innerHTML = _wheelHTML;
     _lastWheelResultHTML = _wheelHTML;
   }, 4100);
