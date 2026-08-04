@@ -161,6 +161,41 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 .cr-cbtn2.neg:hover{box-shadow:0 0 12px #ff003c;background:rgba(255,0,60,.08)}
 .cr-cbtn2.reset{border-color:rgba(255,255,255,.3);color:rgba(255,255,255,.5);box-shadow:none;font-size:.55rem}
 .cr-cbtn2.reset:hover{box-shadow:0 0 8px rgba(255,255,255,.3);background:rgba(255,255,255,.05)}
+
+/* ── ID & HISTORY SYSTEM ── */
+.cr-id-bar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.2em;color:var(--s);opacity:.9;border:1px solid var(--s);border-radius:4px;padding:10px 16px;box-shadow:0 0 14px var(--sp),inset 0 0 10px var(--sd)}
+.cr-id-left{display:flex;align-items:center;gap:10px}
+.cr-id-bar strong{color:var(--s);text-shadow:0 0 10px var(--s),0 0 22px var(--sg);opacity:1;font-size:.85rem;letter-spacing:.25em}
+.cr-verify-link{color:var(--s);opacity:.7;cursor:pointer;text-decoration:none;font-size:.52rem;letter-spacing:.18em;border:1px solid var(--s);background:transparent;font-family:'Share Tech Mono',monospace;padding:4px 10px;border-radius:3px;box-shadow:0 0 5px var(--sp);transition:all .2s}
+.cr-verify-link:hover{opacity:1;box-shadow:0 0 12px var(--s);background:rgba(0,207,255,.08)}
+.cr-provably-link{color:#7eff8d;opacity:.95;cursor:pointer;text-decoration:none;font-size:.52rem;letter-spacing:.18em;border:1px solid #7eff8d;background:rgba(126,255,141,.08);font-family:'Share Tech Mono',monospace;padding:4px 10px;border-radius:3px;box-shadow:0 0 5px rgba(126,255,141,.35);transition:all .2s}
+.cr-provably-link:hover{opacity:1;box-shadow:0 0 12px #7eff8d;background:rgba(126,255,141,.12)}
+.cr-provably-dot{color:#7eff8d;text-shadow:0 0 12px #7eff8d;}
+
+.cr-history-panel{width:100%;border:1px solid var(--s);border-radius:4px;padding:14px 16px;background:transparent;box-shadow:0 0 14px var(--sp),inset 0 0 14px var(--sd)}
+.cr-history-title{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.38em;color:var(--s);opacity:.42;text-align:center;margin-bottom:10px}
+.cr-history-list{display:flex;flex-direction:column;gap:8px;min-height:30px}
+.cr-hist-row{display:flex;align-items:center;gap:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.cr-hist-row:last-child{border-bottom:none;padding-bottom:0}
+.cr-hist-num{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.1em;color:var(--s);opacity:.4;min-width:18px}
+.cr-hist-label{font-family:'Share Tech Mono',monospace;font-size:.48rem;letter-spacing:.15em;color:var(--s);opacity:.35;min-width:60px}
+.cr-hist-pills{display:flex;flex-wrap:wrap;gap:5px}
+.cr-hist-item{font-family:'Share Tech Mono',monospace;font-size:.5rem;letter-spacing:.1em;padding:3px 9px;border-radius:3px;border:1px solid;text-shadow:0 0 6px currentColor}
+.cr-history-empty{font-family:'Share Tech Mono',monospace;font-size:.55rem;letter-spacing:.22em;color:var(--s);opacity:.18;text-align:center}
+
+/* VERIFY MODAL */
+.cr-verify-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:50;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.cr-verify-box{border:1px solid var(--s);border-radius:6px;padding:24px 20px;background:#000;box-shadow:0 0 30px var(--sp);min-width:300px;max-width:380px;width:92%;display:flex;flex-direction:column;align-items:center;gap:12px}
+.cr-verify-title{font-family:'Orbitron',monospace;font-size:1rem;font-weight:900;color:var(--s);text-shadow:0 0 10px var(--s);letter-spacing:.2em}
+.cr-verify-lbl{font-family:'Share Tech Mono',monospace;font-size:.52rem;letter-spacing:.22em;color:var(--s);opacity:.55;align-self:flex-start}
+.cr-verify-input{width:100%;padding:10px 14px;background:rgba(0,207,255,.06);border:1px solid var(--s);border-radius:3px;color:var(--s);font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.18em;outline:none;box-shadow:inset 0 0 8px var(--sd)}
+.cr-verify-input::placeholder{opacity:.3}
+.cr-verify-result{width:100%;min-height:80px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.cr-verify-btns{display:flex;gap:8px;width:100%}
+.cr-verify-btn{flex:1;padding:10px 0;border:1px solid var(--s);background:transparent;color:var(--s);font-family:'Share Tech Mono',monospace;font-size:.58rem;letter-spacing:.2em;cursor:pointer;border-radius:3px;transition:all .18s}
+.cr-verify-btn:hover{background:rgba(0,207,255,.1);box-shadow:0 0 10px var(--s)}
+.cr-verify-btn.close{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.4)}
+.cr-verify-btn.close:hover{background:rgba(255,255,255,.05);box-shadow:none}
 </style>
 </head>
 <body>
@@ -250,6 +285,23 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
       <div class="cr-area" id="crArea">
         <div class="cr-empty">_ AWAITING ROLL _</div>
       </div>
+      <!-- ID BAR -->
+      <div class="cr-id-bar">
+        <div class="cr-id-left">
+          ID: <strong id="user-id">—</strong>
+          <button class="cr-verify-link" id="copyIdBtn">COPY</button>
+          <button class="cr-verify-link" id="verify-btn">VERIFY</button>
+        </div>
+        <button class="cr-provably-link" id="provablyBtn">[ PROVABLY FAIR <span class="cr-provably-dot">●</span> ]</button>
+      </div>
+
+      <!-- ROLL HISTORY -->
+      <div class="cr-history-panel">
+        <div class="cr-history-title">[ ROLL HISTORY ]</div>
+        <div class="cr-history-list" id="historyList">
+          <span class="cr-history-empty">_ NO ROLLS YET _</span>
+        </div>
+      </div>
     </div>
 
     <div class="cr-footer">CRUZ DICE &nbsp;·&nbsp; v5.5 &nbsp;·&nbsp; SYSTEM READY</div>
@@ -260,7 +312,9 @@ body{background:#000;font-family:'Orbitron',monospace;overflow-x:hidden;-webkit-
 // ── Disable right-click & copy ──
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('selectstart', e => e.preventDefault());
-document.addEventListener('copy',        e => e.preventDefault());
+document.addEventListener('copy', e => {
+  if (!_allowCopy) { e.preventDefault(); }
+});
 document.addEventListener('cut',         e => e.preventDefault());
 document.addEventListener('dragstart',   e => e.preventDefault());
 
@@ -696,6 +750,13 @@ function roll() {
   const _diceHTML = `ROLLED <strong>${diceCount}</strong> DICE &nbsp;·&nbsp; POOL: <strong>${pool.map(c => c.label).join(' · ')}</strong>`;
   rBar.innerHTML = _diceHTML;
   _lastDiceResultHTML = _diceHTML;
+
+  const gameId = _genId();
+  lastGameData.gameId = gameId;
+  lastGameData.colors = colorSeq.map(c => c.label);
+
+  addHistoryRow(gameId, colorSeq);
+  _saveRollToFirebase(colorSeq);
 }
 
 
@@ -892,6 +953,10 @@ buildWheel();
 // re-applies it if the displayed text is altered via DevTools / DOM editing.
 let _lastDiceResultHTML  = null;
 let _lastWheelResultHTML = null;
+let lastGameData = {
+  gameId: "",
+  colors: []
+};
 
 function _protectElement(el, getAuthoritativeHTML) {
   if (!el) return;
@@ -921,6 +986,359 @@ function resetCounter() {
   document.getElementById('counterVal').textContent = '0';
 }
 
+
+/* ── Firebase ID & History System ── */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyC0chxlBsshI6x4UKMEj_Mp_LGXVCohFNs",
+  authDomain:        "cruz-dice.firebaseapp.com",
+  databaseURL:       "https://cruz-dice-e2ef3-default-rtdb.firebaseio.com",
+  projectId:         "cruz-dice",
+  storageBucket:     "cruz-dice.firebasestorage.app",
+  messagingSenderId: "148779359325",
+  appId:             "1:148779359325:web:efe41c4ffb09f166b741b4"
+};
+
+let _db = null;
+let _myId = null;
+let _rollHistory = []; // session history only
+const gameHistoryStore = _rollHistory;
+
+function _genId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  const len = 8 + Math.floor(Math.random() * 3); // 8-10 chars
+  let id = '';
+  for (let i = 0; i < len; i++) id += chars[Math.floor(Math.random() * chars.length)];
+  return id;
+}
+
+function _isValidUserId(id) {
+  return typeof id === 'string' && /^[A-Za-z2-9]{8,10}$/.test(id);
+}
+
+function _initFirebase() {
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    _db = firebase.database();
+    console.log('Firebase connected');
+  } catch(e) {
+    _db = null;
+  }
+}
+
+function _colorFromLabel(label) {
+  const col = COLORS.find(c => c.label === label);
+  return col || { id: label.toLowerCase(), label, hex: '#ffffff' };
+}
+
+function _initUserId() {
+  let id = localStorage.getItem('cruz_user_id');
+  if (!_isValidUserId(id)) {
+    id = _genId();
+    try { localStorage.setItem('cruz_user_id', id); } catch(e) {}
+  }
+  _myId = id;
+  const el = document.getElementById('user-id');
+  if (el) el.textContent = id;
+  _rollHistory = [];
+  _rollCount = 0;
+
+  const histList = document.getElementById('historyList');
+  if (histList) {
+    histList.innerHTML = '';
+  }
+}
+
+function _saveRollToFirebase(colors) {
+  if (!_db || !_myId) return;
+  try {
+    const ref = _db.ref('users/' + _myId);
+    const entry = {
+      ts: Date.now(),
+      colors: colors.map(c => c.label).join(','),
+      last: colors[colors.length - 1].label
+    };
+    // Use negative timestamp as key so newest is first in Firebase
+    const key = (0 - Date.now()).toString();
+    ref.child('rolls').child(key).set(entry);
+    ref.child('lastRoll').set(entry);
+    // Clean old rolls — keep only 20
+    ref.child('rolls').once('value').then(s => {
+      if (s.numChildren() > 20) {
+        const keys = [];
+        s.forEach(c => keys.push(c.key));
+        keys.slice(20).forEach(k => ref.child('rolls').child(k).remove());
+      }
+    });
+  } catch(e) {}
+}
+
+let _rollCount = 0;
+
+function addHistoryRow(gameId, colors) {
+  _addToLocalHistory(colors, gameId);
+}
+
+function _addToLocalHistory(colors, gameId, save = true) {
+  const histList = document.getElementById('historyList');
+  if (!histList) return;
+
+  // Remove empty message
+  const empty = histList.querySelector('.cr-history-empty');
+  if (empty) empty.remove();
+
+  _rollCount++;
+
+  // Build a row for this roll
+  const row = document.createElement('div');
+  row.className = 'cr-hist-row';
+
+  if (gameId && save) {
+    _rollHistory.unshift({ id: gameId, colors: colors.map(c => typeof c === 'string' ? c : c.label), ts: Date.now() });
+  }
+
+  const num = document.createElement('span');
+  num.className = 'cr-hist-num';
+  num.textContent = _rollCount + '.';
+
+  const pills = document.createElement('div');
+  pills.className = 'cr-hist-pills';
+
+  colors.forEach(color => {
+    const pill = document.createElement('span');
+    pill.className = 'cr-hist-item';
+    const label = typeof color === 'string' ? color : color.label;
+    const colorObj = typeof color === 'string' ? _colorFromLabel(color) : color;
+    pill.textContent = label;
+    pill.style.color = colorObj.hex;
+    pill.style.borderColor = colorObj.hex;
+    pill.style.background  = colorObj.hex + '18';
+    pills.appendChild(pill);
+  });
+
+  row.appendChild(num);
+  row.appendChild(pills);
+
+  // Most recent roll at top
+  histList.insertBefore(row, histList.firstChild);
+
+  // Keep max 5 rows
+  while (histList.children.length > 5) histList.removeChild(histList.lastChild);
+}
+
+// Verify modal functions
+function getGameFromHistory(gameId) {
+  if (!gameId) return null;
+  return gameHistoryStore.find(item => item.id === gameId) || null;
+}
+
+function renderVerifyColors(colors) {
+  const resultEl = document.getElementById('verifyResult');
+  if (!resultEl) return;
+  if (!Array.isArray(colors) || colors.length === 0) {
+    resultEl.innerHTML = '<span style="color:rgba(255,255,255,.65);font-family:Share Tech Mono,monospace;font-size:.55rem;opacity:.7">NO COLORS AVAILABLE</span>';
+    return;
+  }
+  const pills = colors.map(label => {
+    const col = COLORS.find(c => c.label === label);
+    const hex = col ? col.hex : '#fff';
+    return '<span class="cr-hist-item" style="color:' + hex + ';border-color:' + hex + ';background:' + hex + '18;display:inline-block;margin:3px 3px 0 0;font-size:.55rem;padding:4px 10px">' + label + '</span>';
+  }).join('');
+  resultEl.innerHTML = '<div style="display:flex;flex-wrap:wrap;gap:6px">' + pills + '</div>';
+}
+
+function openVerifyModal(selectedUserId = null) {
+  const verifyInput = document.getElementById('verify-game-id-input');
+  if (verifyInput) verifyInput.value = '';
+  const resultEl = document.getElementById('verifyResult');
+  const resultContainer = document.getElementById('verify-results-container');
+  if (resultEl) resultEl.innerHTML = '';
+  if (resultContainer) resultContainer.innerHTML = '';
+  document.getElementById('verify-modal').style.display = 'flex';
+}
+
+function openVerify() {
+  openVerifyModal();
+}
+
+function closeVerify() {
+  document.getElementById('verify-modal').style.display = 'none';
+}
+
+function _displayVerifyHistory(entries, emptyMessage = 'No history found') {
+  const resultContainer = document.getElementById('verify-results-container');
+  if (!resultContainer) return;
+  resultContainer.innerHTML = '';
+
+  if (!entries || !entries.length) {
+    resultContainer.innerHTML = '<span style="color: red; font-family:Share Tech Mono,monospace;font-size:.55rem;">' + emptyMessage + '</span>';
+    return;
+  }
+
+  entries.forEach((entry, index) => {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.alignItems = 'center';
+    row.style.gap = '10px';
+    row.style.flexWrap = 'wrap';
+    row.style.padding = '8px 10px';
+    row.style.border = '1px solid rgba(255,255,255,.08)';
+    row.style.borderRadius = '5px';
+    row.style.background = 'rgba(255,255,255,.03)';
+    row.style.width = '100%';
+
+    const idx = document.createElement('span');
+    idx.style.fontFamily = 'Share Tech Mono,monospace';
+    idx.style.fontSize = '0.7rem';
+    idx.style.color = 'var(--s)';
+    idx.style.opacity = '0.55';
+    idx.textContent = (index + 1) + '.';
+
+    const pills = document.createElement('div');
+    pills.style.display = 'flex';
+    pills.style.flexWrap = 'wrap';
+    pills.style.gap = '6px';
+
+    entry.colors.forEach(color => {
+      const col = _colorFromLabel(color);
+      const badge = document.createElement('span');
+      badge.className = 'cr-hist-item';
+      badge.textContent = color;
+      badge.style.color = col.hex;
+      badge.style.borderColor = col.hex;
+      badge.style.background = col.hex + '18';
+      pills.appendChild(badge);
+    });
+
+    row.appendChild(idx);
+    row.appendChild(pills);
+    resultContainer.appendChild(row);
+  });
+}
+
+function fetchAndShowVerifyData(userId) {
+  const resultEl = document.getElementById('verifyResult');
+  if (resultEl) resultEl.innerHTML = '';
+  const resultContainer = document.getElementById('verify-results-container');
+  if (resultContainer) resultContainer.innerHTML = '';
+
+  if (!_db || !userId) {
+    _displayVerifyHistory([], 'Invalid Game ID');
+    return;
+  }
+
+  const ref = _db.ref('users/' + userId + '/rolls');
+  ref.orderByChild('ts').limitToLast(5).once('value').then(snapshot => {
+    const entries = [];
+    snapshot.forEach(child => {
+      const val = child.val();
+      const colors = typeof val.colors === 'string'
+        ? val.colors.split(',').filter(Boolean)
+        : Array.isArray(val.colors)
+          ? val.colors
+          : [];
+      entries.push({ id: child.key, colors, ts: val.ts || 0 });
+    });
+    entries.sort((a, b) => b.ts - a.ts);
+    const latestEntries = entries.slice(0, 5);
+    _displayVerifyHistory(latestEntries, latestEntries.length ? 'No history found' : 'No history found');
+  }).catch(() => {
+    _displayVerifyHistory([], 'Invalid Game ID');
+  });
+}
+
+const verifyBtn = document.getElementById('verify-btn');
+if (verifyBtn) {
+  verifyBtn.addEventListener('click', function() {
+    const inputEl = document.getElementById('verify-game-id-input');
+    if (inputEl) inputEl.value = '';
+    const resultEl = document.getElementById('verifyResult');
+    const resultContainer = document.getElementById('verify-results-container');
+    if (resultEl) resultEl.innerHTML = '';
+    if (resultContainer) resultContainer.innerHTML = '';
+    document.getElementById('verify-modal').style.display = 'flex';
+  });
+}
+
+const provablyBtn = document.getElementById('provablyBtn');
+if (provablyBtn) {
+  provablyBtn.addEventListener('click', function() {
+    document.getElementById('provably-modal').style.display = 'flex';
+  });
+}
+
+const closeProvablyBtn = document.getElementById('close-provably-btn');
+if (closeProvablyBtn) {
+  closeProvablyBtn.addEventListener('click', function() {
+    document.getElementById('provably-modal').style.display = 'none';
+  });
+}
+
+const closeVerifyBtn = document.getElementById('close-verify-btn');
+if (closeVerifyBtn) {
+  closeVerifyBtn.addEventListener('click', function() {
+    document.getElementById('verify-modal').style.display = 'none';
+  });
+}
+
+const verifyInputField = document.getElementById('verify-game-id-input');
+if (verifyInputField) {
+  verifyInputField.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      fetchAndShowVerifyData(verifyInputField.value.trim());
+    }
+  });
+}
+
+function doVerify() {
+  const input = document.getElementById('verify-game-id-input').value.trim();
+  const resultEl = document.getElementById('verifyResult');
+  const resultContainer = document.getElementById('verify-results-container');
+  if (resultContainer) resultContainer.innerHTML = '';
+  if (!input) {
+    if (resultEl) resultEl.innerHTML = '<span style="color:#ff003c;font-family:Share Tech Mono,monospace;font-size:.55rem">ENTER AN ID</span>';
+    return;
+  }
+  fetchAndShowVerifyData(input);
+}
+
+function closeProvably() {
+  const modal = document.getElementById('provably-modal');
+  if (modal) { modal.style.display = 'none'; }
+}
+
+// Init
+_initFirebase();
+_initUserId();
+const copyButton = document.getElementById('copyIdBtn');
+if (copyButton) {
+  copyButton.addEventListener('click', copyMyId);
+}
+
+let _allowCopy = false;
+
+function copyMyId() {
+  const id = document.getElementById('user-id').textContent;
+  if (!id || id === '—') return;
+  _allowCopy = true;
+  navigator.clipboard.writeText(id).then(() => {
+    const btn = document.getElementById('copyIdBtn');
+    if (btn) { btn.textContent = 'COPIED!'; setTimeout(() => { btn.textContent = 'COPY'; }, 1500); }
+  }).catch(() => {
+    // fallback for file:// protocol
+    const ta = document.createElement('textarea');
+    ta.value = id;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('copyIdBtn');
+    if (btn) { btn.textContent = 'COPIED!'; setTimeout(() => { btn.textContent = 'COPY'; }, 1500); }
+  }).finally(() => { setTimeout(() => { _allowCopy = false; }, 100); });
+}
+
 rollBtn.addEventListener('click', roll);
 
 function warn(msg) {
@@ -930,5 +1348,42 @@ function warn(msg) {
   setTimeout(() => el.remove(), 2400);
 }
 </script>
+
+<!-- VERIFY MODAL -->
+<div class="cr-verify-overlay" id="verify-modal" style="display:none">
+  <div class="cr-verify-box">
+    <div class="cr-verify-title">&#128737; VERIFY</div>
+    <div class="cr-verify-lbl">GAME ID:</div>
+    <input class="cr-verify-input" id="verify-game-id-input" placeholder="Enter ID..." maxlength="10">
+    <div class="cr-verify-result" id="verifyResult"></div>
+    <div id="verify-results-container" style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px"></div>
+    <div class="cr-verify-btns">
+      <button class="cr-verify-btn" onclick="doVerify()">REFRESH</button>
+      <button class="cr-verify-btn close" id="close-verify-btn" onclick="closeVerify()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROVABLY FAIR MODAL -->
+<div class="cr-verify-overlay" id="provably-modal" style="display:none">
+  <div class="cr-verify-box">
+    <div class="cr-verify-title">PROVABLY FAIR SYSTEM</div>
+    <div class="cr-verify-lbl">PROVABLY FAIR ALGORITHM</div>
+    <div class="cr-verify-result" style="color: #88eeff; white-space:pre-wrap; text-align:left; min-height:auto; max-height:none; overflow:auto;">
+      <div style="color: #88eeff; font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; line-height: 1.6; text-align: left; padding: 10px 0;">
+        <p style="margin-bottom: 12px; color: var(--s);">PROVABLY FAIR ALGORITHM</p>
+        <p style="margin-bottom: 10px;">Our platform utilizes a cryptographic Provably Fair system to guarantee that every dice roll outcome is 100% random, unmanipulated, and verifiable.</p>
+        <p style="margin-bottom: 6px; font-weight: bold; color: #fff;">HOW IT WORKS:</p>
+        <p style="margin-bottom: 4px;">1. Unalterable History: Each generated Game ID logs outcome sequences directly to our real-time cryptographic ledger.</p>
+        <p style="margin-bottom: 4px;">2. Transparency: Results cannot be altered or overwritten post-roll by any party.</p>
+        <p style="margin-bottom: 12px;">3. Verification: You can cross-reference any past sequence anytime using the VERIFY tool with your unique ID.</p>
+        <p style="color: #00ff87; font-weight: bold;">STATUS: ACTIVE & ENCRYPTED</p>
+      </div>
+    </div>
+    <div class="cr-verify-btns">
+      <button class="cr-verify-btn close" id="close-provably-btn" onclick="closeProvably()">CLOSE</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
